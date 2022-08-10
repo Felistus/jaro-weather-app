@@ -1,4 +1,4 @@
-# Weather App
+# jaro-weather-app
 <h1 align="center">Jaro's Weather-App</h1>
 
 <div align="center">
@@ -7,11 +7,11 @@
 
 <div align="center">
   <h3>
-    <a href="https://{your-demo-link.your-domain}">
+    <a href="https://jaro-weather-app.vercel.app/">
       Demo
     </a>
     <span> | </span>
-    <a href="https://github.com/Felistus/weather-app">
+    <a href="https://github.com/Felistus/jaro-weather-app">
       Solution
     </a>
     <span> | </span>
@@ -32,26 +32,34 @@
 
 ## Overview
 
-![screenshot](https://user-images.githubusercontent.com/16707738/92399059-5716eb00-f132-11ea-8b14-bcacdc8ec97b.png)
+![screenshot](/public/images/appScreenshot.PNG)
 
 Introduce your projects by taking a screenshot or a gif. Try to tell visitors a story about your project by answering:
 
 - Where can I see your demo?
+  The demo for this project can be found using the **Demo** link above.
+
 - What was your experience?
+  Building this app was a awesome experience, sweet and at the same time bitter. Every bit of it was challenging ranging from the design implementation down to the functionality programming. I had to pay attention to every details outlined by the designer in-order not to misrepresent the design. Though I brought in some initiative to better improve the layout.
+
 - What have you learned/improved?
+  - API data and error handling
+  - Better use of vercel SWR for fetching and caching of data for efficiency and low latency
+  - Attention to details and time management
+  - Using custom fonts in Next.js
+  - Deployment on vercel and adding environmental variables for production
+
 - Your wisdom? :)
+  Keep practising, and perfection will have no option but to embrace you.
 
 ### Built With
-
-<!-- This section should list any major frameworks that you built your project using. Here are a few examples.-->
 
 - [React](https://reactjs.org/)
 - [Next.js](https://nextjs.org/docs)
 - [Tailwind](https://tailwindcss.com/)
+- [HeadlessUI](https://headlessui.com)
 
 ## Features
-
-<!-- List the features of your application or follow the template. Don't share the figma file here :) -->
 
 This application/site was created as a submission to a [DevChallenges](https://devchallenges.io/challenges) challenge. The [challenge](https://devchallenges.io/challenges/mM1UIenRhK808W8qmLWv) was to build an application to complete the given user stories.
 
@@ -61,10 +69,11 @@ To clone and run this application, you'll need [Git](https://git-scm.com) and [N
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/Felistus/weather-app.git
+$ git clone https://github.com/Felistus/jaro-weather-app.git
 
 # NOTE: 
-# You might need to install *pnpm* globally or locally if you don't have it installed already (if using pnpm)
+# You might need to install *pnpm* globally or locally if you don't have it 
+# installed already (if using pnpm)
 $ npm install -g pnpm
 
 # Install dependencies
@@ -76,15 +85,13 @@ $ pnpm run dev
 
 ## Acknowledgements
 
-<!-- This section should list any articles or add-ons/plugins that helps you to complete the project. This is optional but it will help you in the future. For example: -->
-
 - [Steps to replicate a design with only HTML and CSS](https://devchallenges-blogs.web.app/how-to-replicate-design/)
 - [Node.js](https://nodejs.org/)
 - [Marked - a markdown parser](https://github.com/chjj/marked)
+- [Openweathermap](https://home.openweathermap.org/users/sign_up) <!--fetch weather reports-->
+- [Countriesnow](https://documenter.getpostman.com/view/1134062/T1LJjU52?version=latest) <!--get cities of the world-->
 
 ## Contact
 
-- Website [your-website.com](https://{your-web-site-link})
-- GitHub [@your-username](https://{github.com/your-usermame})
-- Twitter [@your-twitter](https://{twitter.com/your-username})
-# jaro-weather-app
+- GitHub [@felistus](https://github.com/felistus)
+- Twitter [@ezeugoobieze](https://twitter.com/ezeugoobieze)
