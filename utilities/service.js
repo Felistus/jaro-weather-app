@@ -14,7 +14,11 @@ export const filterWeatherForecastForFiveDays = (forecastReport) => {
     (today.getMonth() + 1).length > 1
       ? today.getMonth() + 1
       : "0" + (today.getMonth() + 1)
-  }-${today.getDate().length > 1 ? today.getDate() : "0" + today.getDate()}`;
+  }-${
+    today.getDate().toString().length > 1
+      ? today.getDate()
+      : "0" + today.getDate()
+  }`;
   const fiveDaysReport = [];
 
   reportArray

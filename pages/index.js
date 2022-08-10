@@ -12,6 +12,9 @@ import {
   todayDate,
 } from "../utilities/service";
 import Acknowledement from "../components/Acknowledgement";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const imageLoader = ({ src, width, quality }) => {
   return `https://openweathermap.org/img/wn/${src}@4x.png?w=${width}&q=${
@@ -89,7 +92,7 @@ export default function Home() {
         const result = filterWeatherForecastForFiveDays(fiveDaysForecast);
         setDaysReport(result);
       } else {
-        alert("city not available for now... try another");
+        toast.error("City not available for now... try another");
         setSelectedCity("abuja");
       }
 
@@ -297,6 +300,7 @@ export default function Home() {
             <Acknowledement openAck={openAck} setOpenAck={setOpenAck} />
           </div>
         </section>
+        <ToastContainer />
       </main>
     </div>
   );
