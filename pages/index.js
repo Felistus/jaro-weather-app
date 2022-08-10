@@ -51,7 +51,9 @@ export default function Home() {
       {celTemp ? (
         <div className="text-base">
           <p>
-            <span className="font-medium">{item.main.temp_min}</span>
+            <span className="font-medium">
+              {Math.floor(item.main.temp_min / 10).toFixed(2)}
+            </span>
             <span>
               <sup>o</sup>
             </span>
@@ -62,7 +64,7 @@ export default function Home() {
         <div className="text-base">
           <p>
             <span className="font-medium">
-              {(item.main.temp_min * 1.8 + 32).toFixed(2)}
+              {((item.main.temp_min / 10) * 1.8 + 32).toFixed(2)}
             </span>
             <span>
               <sup>o</sup>
@@ -133,7 +135,7 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="w-full h-[350px] bg-[url('/images/Cloud-background.png')] bg-no-repeat bg-center bg-contain lg:bg-cover flex justify-center items-center ">
+            <div className="w-full h-[350px] bg-[url('/images/Cloud-background.png')] lg:bg-[url('/images/Cloud-background.png')] md:bg-none bg-no-repeat bg-center lg:bg-cover flex justify-center items-center ">
               {!cityWeather && (
                 <div className="animate-pulse text-white font-medium">
                   Loading
@@ -155,7 +157,7 @@ export default function Home() {
               <div className="flex items-center flex-col my-[87px] ">
                 <span className=" text-[#E7E7EB] flex items-center">
                   <div className="font-medium text-[144px]">
-                    {cityWeather && Math.floor(cityWeather.main.temp)}
+                    {cityWeather && Math.floor(cityWeather.main.temp / 10)}
                   </div>
                   <div className="mt-8 text-5xl">
                     <sup>o</sup>
@@ -294,7 +296,11 @@ export default function Home() {
             <footer className="flex justify-center text-white pt-24 md:pb-[6px] space-x-2">
               <p>created by</p>
               <p>
-                <Link href="https://github.com/Felistus">felistus</Link>
+                <Link href="https://github.com/Felistus" passHref>
+                  <a target="_blank" rel="noopener noreferrer">
+                    Ezeugo Felistus Obieze
+                  </a>
+                </Link>
               </p>
             </footer>
             <Acknowledement openAck={openAck} setOpenAck={setOpenAck} />
