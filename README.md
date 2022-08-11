@@ -48,6 +48,7 @@ Introduce your projects by taking a screenshot or a gif. Try to tell visitors a 
   - Attention to details and time management
   - Using custom fonts in Next.js
   - Deployment on vercel and adding environmental variables for production
+  - Added a geolocation API to automatically detect the user's location as first city to display weather
 
 - Your wisdom? :)
   Keep practising, and perfection will have no option but to embrace you.

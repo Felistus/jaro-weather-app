@@ -10,10 +10,11 @@ export const filterWeatherForecastForFiveDays = (forecastReport) => {
   const reportArray = forecastReport.list;
   const reportSet = new Set();
   const today = new Date();
+
   const todayDate = `${today.getFullYear()}-${
-    (today.getMonth() + 1).length > 1
+    (today.getMonth() + 1).toString().length > 1
       ? today.getMonth() + 1
-      : "0" + (today.getMonth() + 1)
+      : "0" + (today.getMonth() + 1).toString()
   }-${
     today.getDate().toString().length > 1
       ? today.getDate()
@@ -33,6 +34,9 @@ export const filterWeatherForecastForFiveDays = (forecastReport) => {
         fiveDaysReport.push(item);
       }
     });
+  if (fiveDaysReport.length === 4) {
+    fiveDaysReport.unshift(reportArray[1]);
+  }
   return fiveDaysReport;
 };
 
@@ -44,7 +48,6 @@ export function getNumberOfDays(createdAt) {
   const dateString = `${year}-${month}-${day}`;
   const dateObject = new Date(dateString);
   const timeDiff = Math.abs(Date.now() - dateObject.getTime());
-  const diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-
+  const diffDays = Math.round(timeDiff / (1000 * 3600 * 24));
   return diffDays === 1 ? "Tomorrow" : todayDate(createdAt);
 }

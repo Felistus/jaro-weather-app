@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import RangeBar from "../components/Range";
 import SearchDrawer from "../components/SearchDrawer";
-import { useContext, useEffect, useState } from "react";
-import { SelectCity, CityWeather } from "./_app";
-import { allReport } from "../utilities/fetchServices";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { SelectCity, CityWeather, UserLocation } from "./_app";
+import { allReport, userCity } from "../utilities/fetchServices";
 import {
   filterWeatherForecastForFiveDays,
   getNumberOfDays,
@@ -28,6 +28,7 @@ export default function Home() {
   const { selectedCity, setSelectedCity } = useContext(SelectCity);
   const [daysReport, setDaysReport] = useState([]);
   const { cityWeather, setCityWeather } = useContext(CityWeather);
+  // const { personLocation, setPersonLocation } = useContext(UserLocation);
   const [celTemp, setCelTemp] = useState(true);
   const [fahTemp, setFahTemp] = useState(false);
   const openModal = () => setIsOpen((prevState) => !prevState);
@@ -94,15 +95,49 @@ export default function Home() {
         setCityWeather(oneDayForecast);
         const result = filterWeatherForecastForFiveDays(fiveDaysForecast);
         setDaysReport(result);
+        // setIsOpen(false);
       } else {
         toast.error("City not available for now... try another");
-        setSelectedCity("abuja");
+        setSelectedCity("london");
       }
-
-      setIsOpen(false);
     }
-    fetchCityWeather(selectedCity);
+    if (selectedCity) fetchCityWeather(selectedCity);
   }, [selectedCity, setCityWeather, setSelectedCity]);
+
+  useEffect(() => {
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    };
+    async function success(pos) {
+      const crd = pos.coords;
+      const location = await userCity(crd.latitude, crd.longitude);
+      console.log(location[0].name);
+      setSelectedCity(location[0].name);
+    }
+    if ("geolocation" in navigator) {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then(function (result) {
+          if (result.state === "granted") {
+            navigator.geolocation.getCurrentPosition(success);
+          } else if (result.state === "prompt") {
+            navigator.geolocation.getCurrentPosition(success, errors, options);
+          } else if (result.state === "denied") {
+            //If denied then you have to show instructions to enable location
+          }
+          result.onchange = function () {
+            console.log(result.state);
+          };
+        });
+    } else {
+      toast.warning("Sorry not available");
+    }
+    function errors(err) {
+      console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+  }, [setSelectedCity]);
   return (
     <div>
       <Head>
@@ -114,21 +149,10 @@ export default function Home() {
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href="/favicon/apple-touch-icon.png"
+          href="/apple-touch-icon.png"
         />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/favicon/site.webmanifest" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon_.png" />
       </Head>
 
       <main>
@@ -235,14 +259,15 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="md:w-[704px] md:mx-auto px-[51px] md:px-0 pt-[51px] md:pt-0 grid grid-cols-2 md:grid-cols-5 gap-x-[26px] gap-y-8 mb-[51px] md:mb-[72px]">
-              {!items && (
-                <div className="animate-pulse text-white font-medium">
-                  Loading
-                </div>
-              )}
-              {items && items}
-            </div>
+            {!selectedCity ? (
+              <div className="h-[177px] animate-pulse text-center md:w-[704px] md:mx-auto px-[51px] md:px-0 pt-[51px] md:pt-0 text-white font-medium">
+                <p> Loading</p>
+              </div>
+            ) : (
+              <div className="md:w-[704px] md:mx-auto px-[51px] md:px-0 pt-[51px] md:pt-0 grid grid-cols-2 md:grid-cols-5 gap-x-[26px] gap-y-8 mb-[51px] md:mb-[72px]">
+                {items && items}
+              </div>
+            )}
 
             <section>
               <div className="md:w-[704px] md:mx-auto  ">
@@ -250,63 +275,138 @@ export default function Home() {
                   Today &apos;s Highlight
                 </p>
                 <div className="px-[23px] md:px-0 gap-12 grid md:grid-cols-2  ">
-                  <div className="md:max-w-[328px] md:w-[328px] h-[204px] bg-[#1E213A] text-[#E7E7EB] flex justify-center items-center flex-col">
-                    <p className="font-medium text-base mt-[22px]">
-                      Wind Status
-                    </p>
-                    <p className="mt-[6px] mb-[26px]">
-                      <span className="font-bold text-[64px] ">
-                        {cityWeather && cityWeather.wind.speed}
-                      </span>
-                      <span className="font-medium text-4xl ">mph</span>
-                    </p>
-                    <div className="flex items-center space-x-2 mb-[35px]">
-                      <Image
-                        src={"/icons/directionIcon.svg"}
-                        alt="my location icon"
-                        width={"21"}
-                        height={"21"}
-                      />
-                      <p>WSW</p>
+                  {!cityWeather ? (
+                    <div className="shadow rounded-md p-4 md:max-w-[328px] md:w-[328px] h-[204px] border border-[#1E213A]">
+                      <div className="animate-pulse flex space-x-4">
+                        <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+                        <div className="flex-1 space-y-6 py-1">
+                          <div className="h-2 bg-slate-700 rounded"></div>
+                          <div className="space-y-3">
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                              <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                            </div>
+                            <div className="h-2 bg-slate-700 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="md:max-w-[328px] md:w-[328px] h-[204px] bg-[#1E213A] text-[#E7E7EB] flex justify-center items-center flex-col">
-                    <p className="font-medium text-base mt-[22px]">Humidity</p>
-                    <p className="mt-[6px] mb-[26px]">
-                      <span className="font-bold text-[64px] ">
-                        {cityWeather && cityWeather.main.humidity}
-                      </span>
-                      <span className="font-medium text-4xl ">%</span>
-                    </p>
-                    <div className="flex items-center space-x-2 mb-[35px]">
-                      <RangeBar
-                        humidity={cityWeather && cityWeather.main.humidity}
-                      />
+                  ) : (
+                    <div className="md:max-w-[328px] md:w-[328px] h-[204px] bg-[#1E213A] text-[#E7E7EB] flex justify-center items-center flex-col">
+                      <p className="font-medium text-base mt-[22px]">
+                        Wind Status
+                      </p>
+                      <p className="mt-[6px] mb-[26px]">
+                        <span className="font-bold text-[64px] ">
+                          {cityWeather && cityWeather.wind.speed}
+                        </span>
+                        <span className="font-medium text-4xl ">mph</span>
+                      </p>
+                      <div className="flex items-center space-x-2 mb-[35px]">
+                        <Image
+                          src={"/icons/directionIcon.svg"}
+                          alt="my location icon"
+                          width={"21"}
+                          height={"21"}
+                        />
+                        <p>WSW</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
-                  <div className="md:max-w-[328px] md:w-[328px] h-[159px] bg-[#1E213A]  text-[#E7E7EB] flex justify-center items-center flex-col">
-                    <p className="font-medium text-base mt-[22px]">
-                      Visibility
-                    </p>
-                    <p className="mt-[6px] mb-[26px]">
-                      <span className="font-bold text-[64px] ">
-                        {cityWeather && cityWeather.visibility / 1000}
-                      </span>
-                      <span className="font-medium text-4xl ">km</span>
-                    </p>
-                  </div>
-                  <div className="md:max-w-[328px] md:w-[328px] h-[159px] bg-[#1E213A] text-[#E7E7EB] flex justify-center items-center flex-col">
-                    <p className="font-medium text-base mt-[22px]">
-                      Air Pressure
-                    </p>
-                    <p className="mt-[6px] mb-[26px]">
-                      <span className="font-bold text-[64px] ">
-                        {cityWeather && cityWeather.main.pressure / 100}
-                      </span>
-                      <span className="font-medium text-4xl ">mb</span>
-                    </p>
-                  </div>
+                  {!cityWeather ? (
+                    <div className="shadow rounded-md p-4 md:max-w-[328px] md:w-[328px] h-[204px] border border-[#1E213A]">
+                      <div className="animate-pulse flex space-x-4">
+                        <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+                        <div className="flex-1 space-y-6 py-1">
+                          <div className="h-2 bg-slate-700 rounded"></div>
+                          <div className="space-y-3">
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                              <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                            </div>
+                            <div className="h-2 bg-slate-700 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="md:max-w-[328px] md:w-[328px] h-[204px] bg-[#1E213A] text-[#E7E7EB] flex justify-center items-center flex-col">
+                      <p className="font-medium text-base mt-[22px]">
+                        Humidity
+                      </p>
+                      <p className="mt-[6px] mb-[26px]">
+                        <span className="font-bold text-[64px] ">
+                          {cityWeather && cityWeather.main.humidity}
+                        </span>
+                        <span className="font-medium text-4xl ">%</span>
+                      </p>
+                      <div className="flex items-center space-x-2 mb-[35px]">
+                        <RangeBar
+                          humidity={cityWeather && cityWeather.main.humidity}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {!cityWeather ? (
+                    <div className="shadow rounded-md p-4 md:max-w-[328px] md:w-[328px] h-[204px] border border-[#1E213A]">
+                      <div className="animate-pulse flex space-x-4">
+                        <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+                        <div className="flex-1 space-y-6 py-1">
+                          <div className="h-2 bg-slate-700 rounded"></div>
+                          <div className="space-y-3">
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                              <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                            </div>
+                            <div className="h-2 bg-slate-700 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="md:max-w-[328px] md:w-[328px] h-[159px] bg-[#1E213A]  text-[#E7E7EB] flex justify-center items-center flex-col">
+                      <p className="font-medium text-base mt-[22px]">
+                        Visibility
+                      </p>
+                      <p className="mt-[6px] mb-[26px]">
+                        <span className="font-bold text-[64px] ">
+                          {cityWeather && cityWeather.visibility / 1000}
+                        </span>
+                        <span className="font-medium text-4xl ">km</span>
+                      </p>
+                    </div>
+                  )}
+                  {!cityWeather ? (
+                    <div className="shadow rounded-md p-4 md:max-w-[328px] md:w-[328px] h-[204px] border border-[#1E213A]">
+                      <div className="animate-pulse flex space-x-4">
+                        <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+                        <div className="flex-1 space-y-6 py-1">
+                          <div className="h-2 bg-slate-700 rounded"></div>
+                          <div className="space-y-3">
+                            <div className="grid grid-cols-3 gap-4">
+                              <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                              <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                            </div>
+                            <div className="h-2 bg-slate-700 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="md:max-w-[328px] md:w-[328px] h-[159px] bg-[#1E213A] text-[#E7E7EB] flex justify-center items-center flex-col">
+                      <p className="font-medium text-base mt-[22px]">
+                        Air Pressure
+                      </p>
+                      <p className="mt-[6px] mb-[26px]">
+                        <span className="font-bold text-[64px] ">
+                          {cityWeather && cityWeather.main.pressure / 100}
+                        </span>
+                        <span className="font-medium text-4xl ">mb</span>
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </section>

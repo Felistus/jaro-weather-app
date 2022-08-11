@@ -28,6 +28,18 @@ async function cityWeather(cityName) {
     console.error(error);
   }
 }
+
+export async function userCity(latitude, longitude) {
+  try {
+    const { data } = await axios.get(
+      `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=${id}`
+    );
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function cityWeatherForecast(cityName) {
   try {
     const { data } = await axios.get(
