@@ -1,5 +1,6 @@
 import axios from "axios";
 const id = process.env.NEXT_PUBLIC_API_KEY;
+const locationId = process.env.NEXT_PUBLIC_LOCATION_KEY;
 
 async function getCities() {
   try {
@@ -68,7 +69,7 @@ export async function getCityWeather(cityName) {
 export async function userCity(latitude, longitude) {
   try {
     const { data } = await axios.get(
-      `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=${id}`
+      `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=${locationId}`
     );
     return data;
   } catch (error) {
