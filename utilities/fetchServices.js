@@ -69,7 +69,7 @@ export async function getCityWeather(cityName) {
 export async function userCity(latitude, longitude) {
   try {
     const { data } = await axios.get(
-      `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=${locationId}`
+      `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=${id}`
     );
     return data;
   } catch (error) {
