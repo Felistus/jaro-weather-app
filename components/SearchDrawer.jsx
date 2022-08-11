@@ -10,7 +10,7 @@ export default function SearchDrawer({ isOpen, setIsOpen }) {
   const [searchValue, setSearchValue] = useState("");
   const { data: cities, error } = useSWR("cities", citiesFetcher);
   const [fewCities, setFewCities] = useState([]);
-  const { selectedCity, setSelectedCity } = useContext(SelectCity);
+  const setSelectedCity = useContext(SelectCity).setSelectedCity;
   const closeModal = () => setIsOpen((prevState) => !prevState);
 
   function changeSearchValue(e) {
@@ -104,7 +104,7 @@ export default function SearchDrawer({ isOpen, setIsOpen }) {
                   </div>
 
                   <div className="mt-4">
-                    <SelectBox fewCities={fewCities} />
+                    <SelectBox fewCities={fewCities} setIsOpen={setIsOpen} />
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
