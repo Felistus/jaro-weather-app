@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import RangeBar from "../components/Range";
 import SearchDrawer from "../components/SearchDrawer";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { SelectCity, CityWeather, UserLocation } from "./_app";
+import { useContext, useEffect, useState } from "react";
+import { SelectCity, CityWeather } from "./_app";
 import { allReport, userCity } from "../utilities/fetchServices";
 import {
   filterWeatherForecastForFiveDays,
@@ -28,7 +28,6 @@ export default function Home() {
   const { selectedCity, setSelectedCity } = useContext(SelectCity);
   const [daysReport, setDaysReport] = useState([]);
   const { cityWeather, setCityWeather } = useContext(CityWeather);
-  // const { personLocation, setPersonLocation } = useContext(UserLocation);
   const [celTemp, setCelTemp] = useState(true);
   const [fahTemp, setFahTemp] = useState(false);
   const openModal = () => setIsOpen((prevState) => !prevState);
@@ -95,10 +94,10 @@ export default function Home() {
         setCityWeather(oneDayForecast);
         const result = filterWeatherForecastForFiveDays(fiveDaysForecast);
         setDaysReport(result);
-        // setIsOpen(false);
       } else {
         toast.error("City not available for now... try another");
         setSelectedCity("london");
+        setIsOpen(false);
       }
     }
     if (selectedCity) fetchCityWeather(selectedCity);
@@ -113,9 +112,10 @@ export default function Home() {
     async function success(pos) {
       const crd = pos.coords;
       const location = await userCity(crd.latitude, crd.longitude);
-      console.log(location[0].name);
       setSelectedCity(location[0].name);
     }
+    const errors = (err) => console.warn(`ERROR(${err.code}): ${err.message}`);
+
     if ("geolocation" in navigator) {
       navigator.permissions
         .query({ name: "geolocation" })
@@ -125,19 +125,17 @@ export default function Home() {
           } else if (result.state === "prompt") {
             navigator.geolocation.getCurrentPosition(success, errors, options);
           } else if (result.state === "denied") {
-            //If denied then you have to show instructions to enable location
+            toast.info("Location access is denied!");
           }
           result.onchange = function () {
-            console.log(result.state);
+            toast.success(result.state);
           };
         });
     } else {
       toast.warning("Sorry not available");
     }
-    function errors(err) {
-      console.warn(`ERROR(${err.code}): ${err.message}`);
-    }
   }, [setSelectedCity]);
+
   return (
     <div>
       <Head>
@@ -424,7 +422,7 @@ export default function Home() {
             <Acknowledement openAck={openAck} setOpenAck={setOpenAck} />
           </div>
         </section>
-        <ToastContainer />
+        <ToastContainer autoClose={5000} />
       </main>
     </div>
   );

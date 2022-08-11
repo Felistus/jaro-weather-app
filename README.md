@@ -89,8 +89,8 @@ $ pnpm run dev
 - [Steps to replicate a design with only HTML and CSS](https://devchallenges-blogs.web.app/how-to-replicate-design/)
 - [Node.js](https://nodejs.org/)
 - [Marked - a markdown parser](https://github.com/chjj/marked)
-- [Openweathermap](https://home.openweathermap.org/users/sign_up) <!--fetch weather reports-->
-- [Countriesnow](https://documenter.getpostman.com/view/1134062/T1LJjU52?version=latest) <!--get cities of the world-->
+- [Openweathermap](https://home.openweathermap.org/users/sign_up)
+- [Countriesnow:cities of the world](https://documenter.getpostman.com/view/1134062/T1LJjU52?version=latest) 
 
 ## Contact
 

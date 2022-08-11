@@ -29,17 +29,6 @@ async function cityWeather(cityName) {
   }
 }
 
-export async function userCity(latitude, longitude) {
-  try {
-    const { data } = await axios.get(
-      `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=${id}`
-    );
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 async function cityWeatherForecast(cityName) {
   try {
     const { data } = await axios.get(
@@ -50,6 +39,7 @@ async function cityWeatherForecast(cityName) {
     console.error(error);
   }
 }
+
 export const allReport = async (cityName) => {
   try {
     const results = await axios.all([
@@ -74,14 +64,14 @@ export async function getCityWeather(cityName) {
     console.error(error);
   }
 }
-// export async function getFiveDaysWeatherForecast(cityName) {
-//   try {
-//     const { data } = await axios.get(
-//       `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${id}`
-//     );
-//     console.log(data);
-//     return data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+
+export async function userCity(latitude, longitude) {
+  try {
+    const { data } = await axios.get(
+      `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=${id}`
+    );
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
