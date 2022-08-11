@@ -3,16 +3,13 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { SelectCity } from "../pages/_app";
 
-export default function SelectBox({ fewCities, setIsOpen }) {
+export default function SelectBox({ fewCities }) {
   const { selectedCity, setSelectedCity } = useContext(SelectCity);
   const [selected, setSelected] = useState(selectedCity);
 
   useEffect(() => {
-    if (selected) {
-      setSelectedCity(selected.toLowerCase());
-      setIsOpen((prev) => !prev);
-    }
-  }, [fewCities, selected, setIsOpen, setSelectedCity]);
+    if (selected) setSelectedCity(selected.toLowerCase());
+  }, [fewCities, selected, setSelectedCity]);
 
   return (
     <Listbox value={selected} onChange={setSelected}>
