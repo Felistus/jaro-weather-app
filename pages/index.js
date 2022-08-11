@@ -125,10 +125,11 @@ export default function Home() {
           } else if (result.state === "prompt") {
             navigator.geolocation.getCurrentPosition(success, errors, options);
           } else if (result.state === "denied") {
-            toast.info("Location access is denied!");
+            setSelectedCity("Port Harcourt");
+            toast.warning("Location access is denied!");
           }
           result.onchange = function () {
-            toast.success(result.state);
+            toast.info(`Location access ${result.state}`);
           };
         });
     } else {
