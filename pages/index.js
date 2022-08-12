@@ -49,10 +49,19 @@ export default function Home() {
         />
       </div>
       {celTemp ? (
-        <div className="text-base">
-          <p>
+        <div className="text-xs flex space-x-2 items-center justify-center">
+          <p title="min temp">
             <span className="font-medium">
-              {Math.floor(item.main.temp_min / 10).toFixed(2)}
+              {(item.main.temp_min / 10).toFixed(1)}
+            </span>
+            <span>
+              <sup>o</sup>
+            </span>
+            <span>C</span>
+          </p>
+          <p title="max temp">
+            <span className="font-medium">
+              {(item.main.temp_max / 10).toFixed(1)}
             </span>
             <span>
               <sup>o</sup>
@@ -61,10 +70,19 @@ export default function Home() {
           </p>
         </div>
       ) : (
-        <div className="text-base">
-          <p>
+        <div className="text-xs flex space-x-2 items-center justify-center">
+          <p title="min temp">
             <span className="font-medium">
-              {((item.main.temp_min / 10) * 1.8 + 32).toFixed(2)}
+              {((item.main.temp_min / 10) * 1.8 + 32).toFixed(1)}
+            </span>
+            <span>
+              <sup>o</sup>
+            </span>
+            <span>F</span>
+          </p>
+          <p title="max temp">
+            <span className="font-medium">
+              {((item.main.temp_max / 10) * 1.8 + 32).toFixed(1)}
             </span>
             <span>
               <sup>o</sup>
@@ -223,9 +241,14 @@ export default function Home() {
                   width={"20"}
                   height={"20"}
                 />
-                <p className="text-[#88869D] text-lg font-bold capitalize ">
-                  {selectedCity}
-                </p>
+                <div className="flex space-x-2 items-center justify-center">
+                  <p className="text-[#88869D] text-lg font-bold capitalize ">
+                    {selectedCity},
+                  </p>
+                  <p className="text-[#88869D] text-lg font-bold capitalize ">
+                    {cityWeather && cityWeather.sys.country}
+                  </p>
+                </div>
               </div>
             </section>
           </div>

@@ -18,7 +18,8 @@ export default function SearchDrawer({ isOpen, setIsOpen }) {
     setSearchValue(keyword);
   }
 
-  function findCity() {
+  function findCity(event) {
+    event.preventDefault();
     cities.filter((item) => {
       if (item.city.toLowerCase() === searchValue) {
         setSelectedCity(item.city.toLowerCase());
@@ -76,7 +77,10 @@ export default function SearchDrawer({ isOpen, setIsOpen }) {
                       />
                     </div>
                   </section>
-                  <div className="flex space-x-[12px] mb-[38px] ">
+                  <form
+                    onSubmit={findCity}
+                    className="flex space-x-[12px] mb-[38px] "
+                  >
                     <div className="flex items-center w-[252px] h-12 border-[1px] border-[#E7E7EB] pl-[15px] pr-2 space-x-[12px] ">
                       <Image
                         src={"/icons/searchIcon.svg"}
@@ -94,17 +98,20 @@ export default function SearchDrawer({ isOpen, setIsOpen }) {
                     </div>
                     <div className="h-12 w-[86px] ">
                       <button
-                        onClick={findCity}
                         disabled={!searchValue}
                         className="bg-[#3C47E9] disabled:bg-gray-700 w-full h-full outline-none text-[#E7E7EB] text-base font-semibold"
                       >
                         Search
                       </button>
                     </div>
-                  </div>
+                  </form>
 
                   <div className="mt-4">
-                    <SelectBox fewCities={fewCities} />
+                    <SelectBox
+                      fewCities={fewCities}
+                      isOpen={isOpen}
+                      setIsOpen={setIsOpen}
+                    />
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
