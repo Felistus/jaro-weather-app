@@ -2,13 +2,14 @@ import { Fragment, useEffect, useState, useContext } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { SelectCity } from "../pages/_app";
+import { ACTIONS } from "../utilities/service";
 
-export default function SelectBox({ fewCities, isOpen, setIsOpen }) {
+export default function SelectBox({ fewCities, dispatch }) {
   const { selectedCity, setSelectedCity } = useContext(SelectCity);
   const [selected, setSelected] = useState(selectedCity);
 
   function setModalState() {
-    setIsOpen((isOpen) => !isOpen);
+    dispatch({ type: ACTIONS.CLOSE });
   }
   useEffect(() => {
     if (selected) setSelectedCity(selected.toLowerCase());
