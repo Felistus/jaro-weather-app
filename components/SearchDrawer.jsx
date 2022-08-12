@@ -104,7 +104,11 @@ export default function SearchDrawer({ isOpen, setIsOpen }) {
                   </div>
 
                   <div className="mt-4">
-                    <SelectBox fewCities={fewCities} />
+                    <SelectBox
+                      fewCities={fewCities}
+                      isOpen={isOpen}
+                      setIsOpen={setIsOpen}
+                    />
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

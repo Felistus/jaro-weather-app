@@ -3,10 +3,13 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { SelectCity } from "../pages/_app";
 
-export default function SelectBox({ fewCities }) {
+export default function SelectBox({ fewCities, isOpen, setIsOpen }) {
   const { selectedCity, setSelectedCity } = useContext(SelectCity);
   const [selected, setSelected] = useState(selectedCity);
 
+  function setModalState() {
+    setIsOpen((isOpen) => !isOpen);
+  }
   useEffect(() => {
     if (selected) setSelectedCity(selected.toLowerCase());
   }, [fewCities, selected, setSelectedCity]);
@@ -42,13 +45,14 @@ export default function SelectBox({ fewCities }) {
               >
                 {({ selected }) => (
                   <>
-                    <span
+                    <div
+                      onClick={setModalState}
                       className={`block truncate ${
                         selected ? "font-medium" : "font-normal"
                       }`}
                     >
                       {person.city.toLowerCase()}
-                    </span>
+                    </div>
                     {selected ? (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-2 text-amber-600">
                         <CheckIcon className="h-5 w-5" aria-hidden="true" />
