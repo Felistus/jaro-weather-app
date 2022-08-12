@@ -9,10 +9,12 @@ export default function RangeBar({ humidity }) {
         <p>100</p>
       </span>
       <input
+        disabled
         type="range"
         min="0"
         max="100"
-        defaultValue={humidity}
+        value={humidity}
+        onChange={(e) => e}
         className="w-full  "
       />
     </div>

@@ -130,6 +130,7 @@ export default function Home() {
     async function success(pos) {
       const crd = pos.coords;
       const location = await userCity(crd.latitude, crd.longitude);
+      console.log(location[0].name);
       setSelectedCity(location[0].name);
     }
     const errors = (err) => console.warn(`ERROR(${err.code}): ${err.message}`);
