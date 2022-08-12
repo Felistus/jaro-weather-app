@@ -5,13 +5,14 @@ import SelectBox from "./SelectBox";
 import useSWR from "swr";
 import { citiesFetcher } from "../utilities/fetchServices";
 import { SelectCity } from "../pages/_app";
+import { ACTIONS } from "../utilities/service";
 
-export default function SearchDrawer({ isOpen, setIsOpen }) {
+export default function SearchDrawer({ state, dispatch }) {
   const [searchValue, setSearchValue] = useState("");
   const { data: cities, error } = useSWR("cities", citiesFetcher);
   const [fewCities, setFewCities] = useState([]);
   const setSelectedCity = useContext(SelectCity).setSelectedCity;
-  const closeModal = () => setIsOpen((prevState) => !prevState);
+  const closeModal = () => dispatch({ type: ACTIONS.CLOSE });
 
   function changeSearchValue(e) {
     const keyword = e.target.value.toLowerCase();
@@ -26,7 +27,7 @@ export default function SearchDrawer({ isOpen, setIsOpen }) {
       }
     });
     setSearchValue("");
-    setIsOpen((prevState) => !prevState);
+    dispatch({ type: ACTIONS.CLOSE });
   }
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function SearchDrawer({ isOpen, setIsOpen }) {
 
   return (
     <>
-      <Transition appear show={isOpen} as={Fragment}>
+      <Transition appear show={state} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
@@ -107,11 +108,7 @@ export default function SearchDrawer({ isOpen, setIsOpen }) {
                   </form>
 
                   <div className="mt-4">
-                    <SelectBox
-                      fewCities={fewCities}
-                      isOpen={isOpen}
-                      setIsOpen={setIsOpen}
-                    />
+                    <SelectBox fewCities={fewCities} dispatch={dispatch} />
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

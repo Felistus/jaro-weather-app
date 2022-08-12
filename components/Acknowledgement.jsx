@@ -1,14 +1,13 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { ACTIONS } from "../utilities/service";
 
-export default function Acknowledement({ openAck, setOpenAck }) {
-  function closeModal() {
-    setOpenAck(false);
-  }
+export default function Acknowledement({ state, dispatch }) {
+  const closeModal = () => dispatch({ type: ACTIONS.CLOSEACK });
 
   return (
     <>
-      <Transition appear show={openAck} as={Fragment}>
+      <Transition appear show={state} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
             as={Fragment}
@@ -49,7 +48,7 @@ export default function Acknowledement({ openAck, setOpenAck }) {
                   <div className="mt-4">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      className="inline-flex justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium text-[#1E213A] hover:bg-[#1E213A] hover:text-white hover:font-medium focus:outline-none focus-visible:ring-2 border border-[#1E213A] focus-visible:ring-offset-2"
                       onClick={closeModal}
                     >
                       Close

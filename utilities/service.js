@@ -1,3 +1,45 @@
+export const ACTIONS = {
+  OPEN: "open",
+  CLOSE: "close",
+  OPENACK: "openAck",
+  CLOSEACK: "closeAck",
+  SET_DAY_REPORT: "setDayReport",
+  OPENCELTEMP: "openCelTemp",
+  CLOSECELTEMP: "closeCelTemp",
+  OPENFAHTEMP: "openFahTemp",
+  CLOSEFAHTEMP: "closeFahTemp",
+};
+export function reducer(state, action) {
+  switch (action.type) {
+    case ACTIONS.OPEN:
+      return { ...state, toggleSearch: true };
+    case ACTIONS.CLOSE:
+      return { ...state, toggleSearch: false };
+    case ACTIONS.OPENACK:
+      return { ...state, toggleAck: true };
+    case ACTIONS.CLOSEACK:
+      return { ...state, toggleAck: false };
+    case ACTIONS.SET_DAY_REPORT:
+      return { ...state, daysReport: action.payload.result };
+    case ACTIONS.OPENCELTEMP:
+      return { ...state, celTemp: true };
+    case ACTIONS.CLOSECELTEMP:
+      return { ...state, celTemp: false };
+    case ACTIONS.OPENFAHTEMP:
+      return { ...state, fahTemp: true };
+    case ACTIONS.CLOSEFAHTEMP:
+      return { ...state, fahTemp: false };
+    default:
+      return state;
+  }
+}
+
+export const imageLoader = ({ src, width, quality }) => {
+  return `https://openweathermap.org/img/wn/${src}@4x.png?w=${width}&q=${
+    quality || 75
+  }`;
+};
+
 export function todayDate(weatherDate) {
   return new Date(weatherDate).toLocaleDateString("en-us", {
     weekday: "short",

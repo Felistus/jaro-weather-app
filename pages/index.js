@@ -3,12 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import RangeBar from "../components/Range";
 import SearchDrawer from "../components/SearchDrawer";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import { SelectCity, CityWeather } from "./_app";
 import { allReport, userCity } from "../utilities/fetchServices";
 import {
+  ACTIONS,
   filterWeatherForecastForFiveDays,
   getNumberOfDays,
+  imageLoader,
+  reducer,
   todayDate,
 } from "../utilities/service";
 import Acknowledement from "../components/Acknowledgement";
@@ -16,24 +19,20 @@ import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export const imageLoader = ({ src, width, quality }) => {
-  return `https://openweathermap.org/img/wn/${src}@4x.png?w=${width}&q=${
-    quality || 75
-  }`;
-};
-
 export default function Home() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [openAck, setOpenAck] = useState(false);
+  const [state, dispatch] = useReducer(reducer, {
+    toggleSearch: false,
+    toggleAck: false,
+    daysReport: [],
+    celTemp: true,
+    fahTemp: false,
+  });
   const { selectedCity, setSelectedCity } = useContext(SelectCity);
-  const [daysReport, setDaysReport] = useState([]);
   const { cityWeather, setCityWeather } = useContext(CityWeather);
-  const [celTemp, setCelTemp] = useState(true);
-  const [fahTemp, setFahTemp] = useState(false);
-  const openModal = () => setIsOpen((prevState) => !prevState);
-  const openAckPop = () => setOpenAck((prevState) => !prevState);
+  const openModal = () => dispatch({ type: ACTIONS.OPEN });
+  const openAckPop = () => dispatch({ type: ACTIONS.OPENACK });
 
-  const items = daysReport.map((item) => (
+  const items = state.daysReport.map((item) => (
     <div
       key={item.dt}
       className="bg-[#1E213A] flex flex-col items-center md:w-[120px] md:max-w-[120px] h-[177px] text-base text-[#E7E7EB] font-medium py-[18px] "
@@ -48,7 +47,7 @@ export default function Home() {
           height={"70"}
         />
       </div>
-      {celTemp ? (
+      {state.celTemp ? (
         <div className="text-xs flex space-x-2 items-center justify-center">
           <p title="min temp">
             <span className="font-medium">
@@ -95,12 +94,12 @@ export default function Home() {
   ));
 
   function changeCelTemp() {
-    setCelTemp(true);
-    setFahTemp(false);
+    dispatch({ type: ACTIONS.OPENCELTEMP });
+    dispatch({ type: ACTIONS.CLOSEFAHTEMP });
   }
   function changeFahTemp() {
-    setCelTemp(false);
-    setFahTemp(true);
+    dispatch({ type: ACTIONS.CLOSECELTEMP });
+    dispatch({ type: ACTIONS.OPENFAHTEMP });
   }
 
   useEffect(() => {
@@ -111,11 +110,11 @@ export default function Home() {
       if (oneDayForecast) {
         setCityWeather(oneDayForecast);
         const result = filterWeatherForecastForFiveDays(fiveDaysForecast);
-        setDaysReport(result);
+        dispatch({ type: ACTIONS.SET_DAY_REPORT, payload: { result: result } });
       } else {
         toast.error("City not available for now... try another");
         setSelectedCity("london");
-        setIsOpen(false);
+        dispatch({ type: ACTIONS.CLOSE });
       }
     }
     if (selectedCity) fetchCityWeather(selectedCity);
@@ -130,7 +129,7 @@ export default function Home() {
     async function success(pos) {
       const crd = pos.coords;
       const location = await userCity(crd.latitude, crd.longitude);
-      console.log(location[0].name);
+      console.log("user-location: ", location[0].name);
       setSelectedCity(location[0].name);
     }
     const errors = (err) => console.warn(`ERROR(${err.code}): ${err.message}`);
@@ -260,7 +259,7 @@ export default function Home() {
                 onClick={changeCelTemp}
                 className={
                   `${
-                    celTemp
+                    state.celTemp
                       ? " text-[#110E3C] bg-[#E7E7EB] "
                       : " text-[#E7E7EB] bg-[#585676] "
                   }` + "font-bold text-lg w-10 h-10 rounded-full "
@@ -272,7 +271,7 @@ export default function Home() {
                 onClick={changeFahTemp}
                 className={
                   `${
-                    fahTemp
+                    state.fahTemp
                       ? " text-[#110E3C] bg-[#E7E7EB] "
                       : " text-[#E7E7EB] bg-[#585676] "
                   }` + "font-bold text-lg w-10 h-10 rounded-full "
@@ -433,7 +432,7 @@ export default function Home() {
                 </div>
               </div>
             </section>
-            <SearchDrawer isOpen={isOpen} setIsOpen={setIsOpen} />
+            <SearchDrawer state={state.toggleSearch} dispatch={dispatch} />
             <footer className="flex justify-center text-white pt-24 md:pb-[6px] space-x-2">
               <p>created by</p>
               <p>
@@ -444,10 +443,10 @@ export default function Home() {
                 </Link>
               </p>
             </footer>
-            <Acknowledement openAck={openAck} setOpenAck={setOpenAck} />
+            <Acknowledement state={state.toggleAck} dispatch={dispatch} />
           </div>
         </section>
-        <ToastContainer autoClose={5000} />
+        <ToastContainer autoClose={3000} />
       </main>
     </div>
   );
