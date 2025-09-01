@@ -1,6 +1,5 @@
 import axios from "axios";
 const id = process.env.NEXT_PUBLIC_API_KEY;
-const locationId = process.env.NEXT_PUBLIC_LOCATION_KEY;
 
 async function getCities() {
   try {

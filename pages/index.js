@@ -43,8 +43,8 @@ export default function Home() {
           loader={imageLoader}
           src={item.weather[0].icon}
           alt="weather icon"
-          width={"80"}
-          height={"70"}
+          width={80}
+          height={70}
         />
       </div>
       {state.celTemp ? (
@@ -113,7 +113,7 @@ export default function Home() {
         dispatch({ type: ACTIONS.SET_DAY_REPORT, payload: { result: result } });
       } else {
         toast.error("City not available for now... try another");
-        setSelectedCity("london");
+        setSelectedCity("port harcourt");
         dispatch({ type: ACTIONS.CLOSE });
       }
     }
@@ -184,13 +184,13 @@ export default function Home() {
               </button>
               <div
                 onClick={openAckPop}
-                className="bg-[#6E707A] w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+                className="bg-[#6E707A] w-10 h-10 rounded-full flex items-center justify-center cursor-pointer relative"
               >
                 <Image
                   src={"/icons/locationIcon.svg"}
                   alt="my location icon"
-                  width={"22"}
-                  height={"22"}
+                  fill
+                  sizes="100%"
                 />
               </div>
             </div>
@@ -238,8 +238,8 @@ export default function Home() {
                 <Image
                   src={"/icons/mapLocationIcon.svg"}
                   alt="my location icon"
-                  width={"20"}
-                  height={"20"}
+                  width={20}
+                  height={20}
                 />
                 <div className="flex space-x-2 items-center justify-center">
                   <p className="text-[#88869D] text-lg font-bold capitalize ">
@@ -328,8 +328,8 @@ export default function Home() {
                         <Image
                           src={"/icons/directionIcon.svg"}
                           alt="my location icon"
-                          width={"21"}
-                          height={"21"}
+                          width={21}
+                          height={21}
                         />
                         <p>WSW</p>
                       </div>
@@ -436,10 +436,13 @@ export default function Home() {
             <footer className="flex justify-center text-white pt-24 md:pb-[6px] space-x-2">
               <p>created by</p>
               <p>
-                <Link href="https://github.com/Felistus" passHref>
-                  <a target="_blank" rel="noopener noreferrer">
-                    Ezeugo Felistus Obieze
-                  </a>
+                <Link
+                  href="https://github.com/Felistus"
+                  passHref
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Ezeugo Felistus Obieze
                 </Link>
               </p>
             </footer>

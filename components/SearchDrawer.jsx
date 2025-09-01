@@ -68,13 +68,13 @@ export default function SearchDrawer({ state, dispatch }) {
                   <section className="flex justify-end items-center">
                     <div
                       onClick={closeModal}
-                      className="my-[17px] mb-[30px] w-10 h-10 rounded-full hover:bg-[#3C47E9] flex justify-center cursor-pointer  "
+                      className="my-[17px] mb-[30px] w-10 h-10 rounded-full hover:bg-[#3C47E9] flex justify-center cursor-pointer relative  "
                     >
                       <Image
                         src={"/icons/cancelIcon.svg"}
                         alt="close button"
-                        width={"20"}
-                        height={"20"}
+                        fill
+                        sizes="100%"
                       />
                     </div>
                   </section>
